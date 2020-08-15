@@ -303,6 +303,18 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_STR:
+            {
+                /* base register (BaseR) */
+                uint16_t r0 = (instr >> 6) & 0x7;
+                
+                /* stored register (SR) */
+                uint16_t r1 = (instr >> 9) & 0x7;
+                
+                /* offset */
+                uint16_t offset = sign_extend(instr & 0x3F, 6);
+                
+                mem_write(reg[r0] + offset, reg[r1]);
+            }
                 break;
             case OP_TRAP:
                 break;
