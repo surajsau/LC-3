@@ -85,6 +85,22 @@ uint16_t sign_extend(uint16_t x, int bit_count) {
     return x;
 }
 
+// Condition Flag updation.
+/*
+    Anytime a value is written in a register, this
+    flag needs to be updated to indicate its sign.
+ */
+void update_flags(uint16_t r) {
+    if(reg[r] == 0) {
+        reg[R_COND] = FL_ZRO;
+    } else if(reg[r] >> 15) {
+        /* 1 in the leftmost bit means it's a negative */
+        reg[R_COND] = FL_NEG;
+    } else {
+        reg[R_COND] = FL_POS;
+    }
+}
+
 int main(int argc, const char * argv[]) {
     return 0;
 }
