@@ -116,7 +116,7 @@ uint16_t mem_read(uint16_t r) {
 }
 
 void mem_write(uint16_t r, uint16_t v) {
-    
+    memory[r] = v;
 }
 
 int main(int argc, const char * argv[]) {
