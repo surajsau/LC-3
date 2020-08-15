@@ -105,6 +105,10 @@ uint16_t mem_read(uint16_t r) {
     return 0xF;
 }
 
+void mem_write(uint16_t r, uint16_t v) {
+    
+}
+
 int main(int argc, const char * argv[]) {
     
     /*
@@ -269,7 +273,7 @@ int main(int argc, const char * argv[]) {
                 /* destination register (DR) */
                 uint16_t r0 = (instr >> 9) & 0x7;
                 
-                /* offset */
+                /* PC offset */
                 uint16_t offset = sign_extend(instr & 0x1FF, 9);
                 
                 reg[r0] = reg[R_PC] + offset;
@@ -277,6 +281,15 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_ST:
+            {
+                /*  stored register (SR) */
+                uint16_t r0 = (instr >> 9) & 0x7;
+                
+                /* PC offset */
+                uint16_t offset = sign_extend(instr & 0x1FF, 9);
+                
+                mem_write(reg[R_PC] + offset, reg[r0]);
+            }
                 break;
             case OP_STI:
                 break;
