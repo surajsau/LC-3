@@ -208,6 +208,21 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_JSR:
+            {
+                /* mode flag */
+                uint16_t flag = (instr >> 11) & 0x1;
+                reg[R_R7] = reg[R_PC];
+                
+                if(flag) {
+                    /* PC offset */
+                    uint16_t offset = sign_extend(instr & 0x7FF, 11);
+                    reg[R_PC] += offset;
+                } else {
+                    /* base register (BaseR) */
+                    uint16_t r0 = (instr >> 6) & 0x7;
+                    reg[R_PC] = reg[r0];
+                }
+            }
                 break;
             case OP_LD:
                 break;
