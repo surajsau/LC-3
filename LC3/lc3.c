@@ -101,6 +101,10 @@ void update_flags(uint16_t r) {
     }
 }
 
+uint16_t mem_read(uint16_t r) {
+    return 0xF;
+}
+
 int main(int argc, const char * argv[]) {
     
     /*
@@ -160,6 +164,16 @@ int main(int argc, const char * argv[]) {
             case OP_LD:
                 break;
             case OP_LDI:
+                {
+                    /* destination register (DR) */
+                    uint16_t r0 = (instr >> 9) & 0x7;
+                    
+                    /* PC offset 9 */
+                    uint16_t pcoffset = sign_extend(instr & 0x1FF, 9);
+                    
+                    /* Add the offset to the current PC and look at the memory location to get the final address */
+                    reg[r0] = mem_read(mem_read(reg[R_PC] + pcoffset));
+                }
                 break;
             case OP_LDR:
                 break;
