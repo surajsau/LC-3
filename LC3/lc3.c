@@ -225,6 +225,16 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_LD:
+            {
+                /* destination register (DR) */
+                uint16_t r0 = (instr >> 9) & 0x7;
+                
+                /* PC offset */
+                uint16_t offset = sign_extend(instr & 0x1FF, 9);
+                
+                reg[r0] = mem_read(reg[R_PC] + offset);
+                update_flags(r0);
+            }
                 break;
             case OP_LDI:
                 {
