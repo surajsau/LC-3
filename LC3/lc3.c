@@ -173,6 +173,7 @@ int main(int argc, const char * argv[]) {
                     
                     /* Add the offset to the current PC and look at the memory location to get the final address */
                     reg[r0] = mem_read(mem_read(reg[R_PC] + pcoffset));
+                    update_flags(r0);
                 }
                 break;
             case OP_LDR:
