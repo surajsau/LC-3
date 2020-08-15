@@ -282,7 +282,7 @@ int main(int argc, const char * argv[]) {
                 break;
             case OP_ST:
             {
-                /*  stored register (SR) */
+                /*  first operand (SR) */
                 uint16_t r0 = (instr >> 9) & 0x7;
                 
                 /* PC offset */
@@ -292,6 +292,15 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_STI:
+            {
+                /* first operand (SR) */
+                uint16_t r0 = (instr >> 9) & 0x7;
+                
+                /* PC offset */
+                uint16_t offset = sign_extend(instr & 0x1FF, 9);
+                
+                mem_write(mem_read(reg[R_PC] + offset), reg[r0]);
+            }
                 break;
             case OP_STR:
                 break;
