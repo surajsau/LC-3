@@ -87,6 +87,16 @@ enum {
     TRAP_HALT = 0x25   /* halt the program */
 };
 
+// Memory Mapped Registers
+/*
+    These are pre-defined special registers. For LC-3, two memory map registers are
+    required.
+ */
+enum {
+    MR_KBSR = 0xFE00, /* keyboard status. Whether the key was pressed or not */
+    MR_KBDR = 0xFE02  /* keyboard data. Which key was pressed */
+};
+
 // Sign Extension
 uint16_t sign_extend(uint16_t x, int bit_count) {
     if((x >> (bit_count - 1)) & 1) {
@@ -111,10 +121,20 @@ void update_flags(uint16_t r) {
     }
 }
 
+// Read from memory
 uint16_t mem_read(uint16_t r) {
-    return 0xF;
+    if(r == MR_KBSR) {
+        if(check_key()) {
+            memory[MR_KBSR] = (1 << 15);
+            memory[MR_KBDR] = getchar();
+        } else {
+            memory[MR_KBSR] = 0;
+        }
+    }
+    return memory[r];
 }
 
+// Write to memory
 void mem_write(uint16_t r, uint16_t v) {
     memory[r] = v;
 }
