@@ -201,6 +201,11 @@ int main(int argc, const char * argv[]) {
             }
                 break;
             case OP_JMP:
+            {
+                /* base register (BaseR) */
+                uint16_t r0 = (instr >> 6) & 0x7;
+                reg[R_PC] = reg[r0];
+            }
                 break;
             case OP_JSR:
                 break;
