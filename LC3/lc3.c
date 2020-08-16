@@ -208,9 +208,10 @@ uint16_t swap16(uint16_t x) {
 void read_image_file(FILE* file) {
     /* the origin tells us where in memory to place the image */
     uint16_t origin;
-    fread(&origin, sizeof(file), 1, file);
+    fread(&origin, sizeof(origin), 1, file);
     origin = swap16(origin);
     
+    /* since we know the maximum file size so we only need one fread */
     uint16_t max_read = UINT16_MAX - origin;
     uint16_t* p = memory + origin;
     size_t read = fread(p, sizeof(uint16_t), max_read, file);
