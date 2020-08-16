@@ -139,6 +139,59 @@ void mem_write(uint16_t r, uint16_t v) {
     memory[r] = v;
 }
 
+
+// LC-3 VMs are big endian.
+/*
+    most of our systems are little endian
+ */
+uint16_t swap16(uint16_t x) {
+    return (x << 8) | (x >> 8);
+}
+
+// Reading an image file
+/*
+    programs are nothing but a set of instructions converted from
+    the assembly programs to machine code (byte code)
+    and putting them onto a file.
+ 
+    These instructions can then be put into memory for execution by loading the
+    file onto the VM. This can then be loaded just by
+    copying the contents right into an address in the memory.
+ 
+    The first 16 bits of any such program is called the origin and
+    specifies the address in the memory where the program should start.
+ */
+void read_image_file(FILE* file) {
+    /* the origin tells us where in memory to place the image */
+    uint16_t origin;
+    fread(&origin, sizeof(file), 1, file);
+    origin = swap16(origin);
+    
+    uint16_t max_read = UINT16_MAX - origin;
+    uint16_t* p = memory + origin;
+    size_t read = fread(p, sizeof(uint16_t), max_read, file);
+
+    /* swap to little endian */
+    while (read-- > 0)
+    {
+        *p = swap16(*p);
+        ++p;
+    }
+}
+
+// Read file from a string path
+int read_image(const char* image_path)
+{
+    FILE* file = fopen(image_path, "rb");
+    if (!file) {
+        return 0;
+    }
+    
+    read_image_file(file);
+    fclose(file);
+    return 1;
+}
+
 int main(int argc, const char * argv[]) {
     
     /*
