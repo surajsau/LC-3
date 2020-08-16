@@ -16,6 +16,8 @@
 #include <sys/termios.h>
 #include <sys/mman.h>
 
+#include "setup.h"
+
 // Memory
 /* 2^16 = 65536 memory allocation */
 uint16_t memory[UINT16_MAX];
