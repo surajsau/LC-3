@@ -93,7 +93,7 @@ enum {
     required.
  */
 enum {
-    MR_KBSR = 0xFE00, /* keyboard status. Whether the key was pressed or not */
+    MR_KBSR = 0xFE00, /* keyboard status. Whether a key was pressed or not */
     MR_KBDR = 0xFE02  /* keyboard data. Which key was pressed */
 };
 
@@ -122,6 +122,11 @@ void update_flags(uint16_t r) {
 }
 
 // Read from memory
+/*
+    KBSR and KBDR allow you to 'poll' the state of the device
+    and continute execution, so that programs remain responsive while
+    awaiting for input from the user.
+ */
 uint16_t mem_read(uint16_t r) {
     if(r == MR_KBSR) {
         if(check_key()) {
